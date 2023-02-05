@@ -19,6 +19,7 @@
 
 char ToggleEnable = 0x01;                       // Global Variable to track if the LED should be on or off
 
+
 int main(void)
 {
     WDTCTL = WDTPW | WDTHOLD;               // Stop watchdog timer
@@ -26,6 +27,9 @@ int main(void)
     // Configure GPIO
     P1OUT &= ~BIT0;                         // Clear P1.0 output latch for a defined power-on state
     P1DIR |= BIT0;                          // Set P1.0 to output direction
+    P6OUT &= ~BIT6;
+    P6DIR |= BIT6;
+
 
     // @TODO You need to add in the configuration for the Green LED
 
@@ -33,6 +37,8 @@ int main(void)
     P2REN |= BIT3;                          // P2.3 pull-up register enable
     P2IES &= ~BIT3;                         // P2.3 Low --> High edge
     P2IE |= BIT3;                           // P2.3 interrupt enabled
+
+
 
     // Disable the GPIO power-on default high-impedance mode
     // to activate previously configured port settings
@@ -46,9 +52,17 @@ int main(void)
     {
         // @TODO You will need to modify this code to change between blinking the Red LED or the Green LED
         if (ToggleEnable)
+        {
             P1OUT ^= BIT0;                  // P1.0 = toggle
-        else
+            P6OUT &= ~BIT6;
+
+        }
+        else{
             P1OUT &= ~BIT0;                 // Set P1.0 to 0
+            P6OUT ^= BIT6;
+
+            }
+
         __delay_cycles(100000);
     }
 }
@@ -60,5 +74,6 @@ __interrupt void Port_2(void)
     // @TODO You might need to modify this based on your approach to the lab
     P2IFG &= ~BIT3;                         // Clear P1.3 IFG
     ToggleEnable ^= 0x01;                   // Enable if the toggle should be active
+
 }
 
