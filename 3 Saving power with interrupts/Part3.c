@@ -22,9 +22,9 @@ int main(){
 
     WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
 
-    runCodeWithSoftwarePolling();
+    //runCodeWithSoftwarePolling();
 
-    //runCodeWithInterrupts();
+    runCodeWithInterrupts();
 
     return 0;
 }
@@ -41,8 +41,10 @@ void runCodeWithSoftwarePolling(){
                                             // to activate previously configured port settings
 
     while(1){
+
         if(P2IN & BIT3)
             P6OUT |= BIT6;
+
         else
             P6OUT &= ~BIT6;
     }
@@ -51,9 +53,10 @@ void runCodeWithSoftwarePolling(){
 void runCodeWithInterrupts(){
 
     P6DIR |= BIT6;              // Configure P6.6 to an Output
+
     P2DIR &= ~BIT3;             // Configure P2.3 to an Input
 
-    P2REN |= BIT3;               // Enable Resistor on P2.3
+    //P2REN |= BIT3;               // Enable Resistor on P2.3
     P2OUT |= BIT3;               // Configure Resistor on P2.3 to be Pullup
 
     P2REN |= BIT3;                          // P2.3 pull-up register enable

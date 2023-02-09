@@ -76,4 +76,12 @@ Then load up Energy Trace and perform the similar capture of Power with the LED 
 
 
 # Screenshots and Answers to Questions
-**Replace this section with your screenshots of Energy Trace and provide some reasoning as to Questions 1 and 2 in the Power consumption of the Interrupts Section.**
+## Software Polling Power Data:
+![Software Polling Power Data](https://i.gyazo.com/f337675da3b1c51f31734b2f395c5157.png)
+
+## Interrupt Power Data:
+![Interrupt Power Data](https://i.gyazo.com/47a08d909341dae9d6a9ba5c13bc61e9.png)
+
+## Questions
+1. When the while loop continues to loop, the MC checks the input P2.3 to see if the input has changed. This draws power every cycle and is an inefficient way of checking for an input, even with low power mode conserving a lot of power. In the interrupt, LPM3 is engaged and the function __no_operation() is used to stop the cpu from performing any tasks until an interrupt is detected. Only then will the CPU act and turn the LED on. These differences are why the interrupt routine has a lower baseline power draw than the polling routine.
+2. There are power increases when the LED is unplugged in both cases. This is because of the choice of using the pull-up resistor instead of the pull-down resistor. When the button used is configured as a pull-up resistor, the button is active low. The input pin in connected to Vcc and the voltage is not connected to ground, meaning that when the button is not pressed, the output is 1. When the button is pressed, the MOSFET is closed and the button is connected to ground, causing the input pin to fall to a 0. This in turn draws power as current flows throught the resistor to ground. If a pull-down resistor was chosen, the opposite would be observed. Current would be constantly flowing through the button as the MOSFET would constantly connect Vcc to ground. 
